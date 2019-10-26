@@ -330,6 +330,20 @@ img#clblastimage {
 	border-bottom: 1px solid #4765B1;
 }
 
-/******************** 
+/********************
+ * Atari ST
+ ********************/
+.pcejs {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-family: sans-serif;
+  /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+  border: 0px none;
+  padding: 0;
+}
+.pcejs-container { margin-top: 32px }
+
+/********************
  * END
  ********************/

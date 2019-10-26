@@ -1,0 +1,21 @@
+---
+layout: default
+title: Cedric Nugteren | Atari ST
+current: 3
+atari: 1
+---
+
+<br/>
+Below you'll find an Atari ST emulator with the <a href=https://github.com/CNugteren/Midisurf>Midisurf</a> game loaded in the A: floppy drive. Unfortunately, <b>audio does not work</b> (exactly what the game is about!), so to really see what it looks like, you'll have <a href=https://github.com/CNugteren/midisurf#running-midisurf-on-an-emulator>install it in a proper emulator</a>.
+<br/>
+
+<div class="pcejs pcejs-container">
+  <div class="pcejs pcejs-loading-status">Loading...</div>
+  <div class="pcejs">
+    <canvas class="pcejs pcejs-canvas" oncontextmenu="event.preventDefault()"></canvas>
+  </div>
+</div>
+<script type="text/javascript" src="bundle.js"></script> 
+
+<br/>
+The above Javascript app runs the <a href=https://github.com/jsdf/pce>pce-js Atari ST emulator</a>. If the mouse doesn't position correctly, go to one of the corners you can reach, move out and then slowly move into the emulator's screen to match the two cursors.
