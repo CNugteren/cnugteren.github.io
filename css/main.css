@@ -241,6 +241,10 @@ img.topimage {
 #list_red {
 	color: #D67568;
 }
+#list_red_large {
+	color: #D67568;
+	font-size: 14pt;
+}
 #list_title {
 	font-weight: normal;
 }
@@ -254,7 +258,7 @@ img.topimage {
 #image_right_big {
 	float: right;
 	max-width: 140px;
-	max-height: 120px;
+	max-height: 70px;
 	padding-left: 20px;
 	border: 0px solid #cccccc;
 }

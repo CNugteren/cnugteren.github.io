@@ -1,0 +1,17 @@
+<div id="list">
+	<div id="list_header">
+		<img id="image_right_big" src="images/{{ include.image }}"></img>
+		<span id="list_red_large">{{ include.shortname }}</span>
+		<br/>
+		{{ include.longname }}
+		<br/>
+		<span id="list_title">{{ include.dates }}</span>
+		<br/>
+		<span id="list_second">{{ include.language }}</span>
+	</div>
+	<div id="list_box">
+		<span id="list_first">{{ include.description }}</span>
+		<br/><br/>
+		View <a href=https://github.com/{{ include.github }}>{{ include.shortname }} on GitHub</a>.
+	</div>
+</div>
