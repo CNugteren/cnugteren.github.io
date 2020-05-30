@@ -14,19 +14,21 @@ First of all, if we go for only 256 threads per SM, we'll suffer from the latenc
 <br/><br/>
 
 To implement this, we'll need twice as much local memory, automatically limiting us to one work-group per SM (and giving us the same 32KB as cuBLAS). Since we cannot have 3D arrays, we'll just flatten one dimension:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Local memory to fit two tiles of A and B
 __local float Asub[2][TSK*TSM];
 __local float Bsub[2][TSK*TSN];
-</pre>
+</pre><br>
 
 Since the kernel code has become quite large, we'll take a look at a shorter pseudo-code version. The code below replaces the previous loop over the tiles. Things to notice:
+<br><br>
 <ul>
     <li>Before starting the loop, we already load the first tile (tile 0) into Asub[0,*] and Bsub[0,*]. After that, we have to synchronise because there is no other barrier before the start of the computation.</li>
     <li>Within the loop we already load the next tile. Note that we need an extra if-statement for when we arrive at the last tile.</li>
     <li>The computation is as before, but now alternates between the two tiles of Asub and Bsub. With pre-fetching, we no longer need to synchronise directly before computation, allowing overlap between loads and FMAs.</li>
 </ul>
+<br>
 <pre class="prettyprint linenums lang-cuda">
 // Load the first tile of A and B into local memory
 load(tile=0, Asub[0][*], Bsub[0][*];
@@ -47,7 +49,7 @@ for (int t=0; t&lt;numTiles; t++) {
     // Perform the computation
     compute(tile=t, Asub[t%2][*], Bsub[t%2][*]);
 }
-</pre>
+</pre><br>
 
 Since pre-fetching uses twice as much local memory, we end up with only 256 active threads. Although we do pre-fetch, this still harms performance significantly, ending up with ~400 GFLOPS less than the previous kernel. However, we no longer have to care about the 128 registers per thread limit to get 512 threads running, so we have headroom for further optimisations. On to the next kernel!
 

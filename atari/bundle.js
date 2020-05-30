@@ -8,11 +8,11 @@ var loadingStatus = utils.loadingStatus(document.querySelector('.pcejs-loading-s
 atarist({
   'arguments': ['-c','pce-config.cfg','-r'],
   autoloadFiles: [
-    'tos-1.00-us.rom',
-    'pce-config.cfg',
-    'fd0.st',
-    'fd1.psi',
-    'hd0.qed',
+    'atari/tos-1.00-us.rom',
+    'atari/pce-config.cfg',
+    'atari/fd0.st',
+    'atari/fd1.psi',
+    'atari/hd0.qed',
   ],
   print: console.log.bind(console),
   printErr: console.warn.bind(console),

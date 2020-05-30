@@ -19,7 +19,7 @@ To get this idea implemented, we'll want to transpose one of the input matrices 
 <br/><br/>
 
 The transpose kernel itself is actually quite trivial and is negligible in terms of computational cost compared to the main matrix-multiplication kernel. Here is the transpose kernel which we used:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Simple transpose kernel for a P * Q matrix
 __kernel void transpose(const int P, const int Q,
@@ -53,10 +53,10 @@ __kernel void transpose(const int P, const int Q,
         output[newID1*Q + newID0] = buffer[tx][ty];
     }
 }
-</pre>
+</pre><br>
 
 Now, let's see what the new matrix-multiplication kernel looks like. We'll take our earlier kernel with an increased work per thread count (WPT) as a starting point. First, let us define some new constants:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 #define TSM 64                 // The tile-size in dimension M
 #define TSN 64                 // The tile-size in dimension N
@@ -64,16 +64,17 @@ Now, let's see what the new matrix-multiplication kernel looks like. We'll take 
 #define WPTN 8                 // The work-per-thread in dimension N
 #define RTSN (TSN/WPTN)        // The reduced tile-size in dimension N
 #define LPT ((TSK*TSM)/(RTSM*RTSN)) // The loads-per-thread for a tile
-</pre>
+</pre><br>
 
 Note that, although we do define separate tile-sizes in the M and N dimensions, we assume for now they are equal. As before, we use the WPT setting to reduce the amount of threads in the second thread dimension. Our launch-parameters are:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 const size_t local[2] = { TSM, TSN/WPTN }; // Or { TSM, RTSN };
 const size_t global[2] = { M, N/WPTN };
-</pre>
+</pre><br>
 
 Our kernel looks a lot like our 3rd version. The most notable differences are:
+<br><br>
 <ul>
     <li>Since matrix B is transposed, reading the inputs A and B is now very similar. The main difference between the two is that outside of a work-group, work-group IDs determine which tile to load.</li>
     <li>Because matrix B is transposed, we'll have to un-transpose data in the local memory. There are two options:
@@ -83,6 +84,7 @@ Our kernel looks a lot like our 3rd version. The most notable differences are:
     </ol></li>
     <li>The constant TS has been replaced with either TSK, TSM, or TSN. Special care has to be taken with respect to the amount of loads per tile, as this is no longer equal to the WPT setting. In fact, the tile-size changes with TSK, whereas the number of threads in a work-group changes with TSM and TSN. Note that the code poses some constraints on the settings, for example LPT has to be an integer. If not, code will grow complicated very quickly and performance will drop due to branches.</li>
 </ul>
+<br><br>
 <pre class="prettyprint linenums lang-cuda">
 // Pre-transpose the input matrix B and use rectangular tiles
 __kernel void myGEMM5(const int M, const int N, const int K,
@@ -138,19 +140,19 @@ __kernel void myGEMM5(const int M, const int N, const int K,
         C[(globalCol + w*RTSN)*M + globalRow] = acc[w];
     }
 }
-</pre>
+</pre><br>
 
 Using the same settings as before (squared tiles of 32 by 32 and a WPT of 8) we achieve only 460 GFLOPS, less than the 689 of the earlier kernel. The decreased performance is caused by bank-conflicts in the local memory in the following line:
-<br/>
+<br/><br>
 <pre class="prettyprint lang-cuda">
 Bsub[row][col + w*RTSN] = B[indexB];
-</pre>
+</pre><br>
 
 The bank-conflicts arise because threads within a warp (same 'col' value, but different 'row' value)  access the same (or many of the same) local memory banks. The image below on the left visualises this: threads in a warp (4 for this toy-example) access data in a column-wise fashion. For example, the first warp will access all elements marked with an 'x'. On our Kepler GPU, local memory is arranged in 32 banks. If TSN is equal to 32, then every column in the picture represents a single bank (let's not consider the different addressing modes for simplicity). To repair this we have to make sure that threads in a warp do not access the same column. A well-known technique is to use padding:
-<br/>
+<br/><br>
 <pre class="prettyprint lang-cuda">
 __local float Bsub[TSN][TSK+2];
-</pre>
+</pre><br>
 
 Padding by 2 will result in the picture on the right, in which we can see that bank conflicts no longer occur (or at least a lot less than before). Note that we pad the memory by 2 rather than 1 to align data to 64-bit (two floats) so that we can still benefit from 64-bit loads from local memory. You probably noted that the padding does consume extra local memory, so this technique might deteriorate performance if occupancy is reduced and latency can no longer be hidden.
 <br/><br/>

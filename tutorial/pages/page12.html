@@ -11,7 +11,7 @@ tutorial_page: 12
 <br/><br/>
 
 Before we do anything else, we'll change our load code a bit, allowing us to change TSM and TSN independent of each other. This can cost a bit of performance, but it gives us some generality:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Load one tile of A into local memory
 for (int la=0; la&lt;LPTA/WIDTH; la++) {
@@ -29,7 +29,7 @@ for (int lb=0; lb&lt;LPTB/WIDTH; lb++) {
    int col = id / (TSN/WIDTH);
    (...)
 }
-</pre>
+</pre><br>
 
 Now, if we want to apply 10 by 10 register blocking (or local memory tiling for that matter) to a 4096 by 4096 matrix for example, we'll end up with partially filled tiles. Since we don't have a 1-to-1 correspondence of thread IDs to data loads, we cannot simply add a big if-statement around the kernel to guard partial-tiles. What we can do is pad the input matrices with zeroes to create complete tiles and remove them from the output matrix afterwards.
 <br/><br/>
@@ -40,7 +40,7 @@ Padding is done as shown below. We first extend the dimensions K, M, and N into 
 <br/><br/>
 
 We use simple kernels to add padding to the input matrices A and B, and a similar kernel to remove padding from the output matrix C. The kernel to add padding is shown below:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Pad the P * Q matrix with zeroes to form a P_XL * Q_XL matrix
 __kernel void paddingAddZeroes(const int P, const int Q,
@@ -68,7 +68,7 @@ __kernel void paddingAddZeroes(const int P, const int Q,
         output[ty*P_XL + tx] = value;
     }
 }
-</pre>
+</pre><br>
 
 Note that we now run a total of 5 kernels: 2 to pad the input matrices, one to transpose the B matrix, one to perform the matrix-multiplication, and finally one to remove the padding from the output matrix. The 4 supporting kernels cost around 3% of the total execution time: not very significant, but it might be beneficial to combine transposing and padding or integrate these kernels into the remainder of your application.
 <br/><br/>

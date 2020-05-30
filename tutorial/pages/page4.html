@@ -24,7 +24,7 @@ Let's translate this abstract image into actual OpenCL code. The trick here is t
 <br/><br/>
 
 To implement tiling, we'll leave our host code from the previous naive kernel intact. Note that it uses 2D work-groups of 32 by 32 (or TS x TS). This means that the purple Csub tile is also 32 by 32. For now, let's also take these dimensions for the Asub and Bsub tiles, we'll investigate rectangular tiles later on.
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Tiled and coalesced version
 __kernel void myGEMM2(const int M, const int N, const int K,
@@ -69,7 +69,7 @@ __kernel void myGEMM2(const int M, const int N, const int K,
 
     // Store the final result in C
     C[globalCol*M + globalRow] = acc;
-}</pre>
+}</pre><br>
 
 If we take a look at the code, we see that the original accumulation loop over K has been split into two new loops: one over all K/TS tiles and one over all TS elements within a tile. Within this loop over the tiles, we can identify two parts which are separated with synchronisation barriers: (1) loading from off-chip memory to local memory, and (2) computation based on local memory data. Note that each thread now performs only two global loads per tile (one element of A and B), whereas this used to be two times the tile-size (a row of A and a column of B). This gives us a reduction of a factor 32 in off-chip memory accesses!
 <br/><br/>

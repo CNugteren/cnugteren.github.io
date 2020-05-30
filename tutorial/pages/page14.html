@@ -11,6 +11,7 @@ We have shown that we can do a lot better than clBlas. So, must we conclude that
 <br/><br/>
 
 Let's first take a look at the un-tuned OpenCL code that clBlas uses. In the code below, there are a couple of things to notice:
+<br><br>
 <ol>
   <li>The work-group size is fixed to 8x8.</li>
   <li>Local memory is not used, meaning that there is no sharing of data within a work-group. On the plus size, this means that you don't have to care about synchronisation or local-memory bandwidth.</li>
@@ -18,6 +19,7 @@ Let's first take a look at the un-tuned OpenCL code that clBlas uses. In the cod
   <li>Since local memory is not used and the matrix B is not transposed, we won't get coalesced accesses. This is partially solved however by the vector data-types.</li>
   <li>By using vector data-types of 8-wide for A and 4-wide for B, clBlas implements a 8 by 4 2D register tiling. This implies that the inner computation loop can perform 4 times 4 times 8 or 128 FMAs before 4 new vector data-elements have to be loaded from off-chip memory.</li>
 </ol>
+<br>
 <pre class="prettyprint linenums lang-cuda">
 typedef union GPtr {
     __global float *f;
@@ -115,9 +117,10 @@ sgemmBlock(
     pC[mad24(3u, (ldc >> 3), 0u)] = tempC3;
 }
 </pre>
+<br>
 
 When we re-roll all unrolled loops and clean the code a bit (and re-write it in our own style), we obtain the myGEMM11 kernel. This kernel is essentially the same as the one above, and therefore also achieves the same performance.
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Settings
 #define RX 8
@@ -194,7 +197,7 @@ __kernel void myGEMM11(const int M, const int N, const int K,
         C[(y + RY*get_global_id(1))*(M/RX) + get_global_id(0)] = accVec;
     }
 }
-</pre>
+</pre><br>
 Since our own version contains loops and uses defines for the register-tiling size, we can actually experiment with other tiling options (note that we do have to support other vector-data types, see the GitHub repository for the full version of myGEMM11). The performance numbers below show that simply tuning one of the parameters of clBlas allows us to squeeze out a bit more performance.
 <br/><br/>
 

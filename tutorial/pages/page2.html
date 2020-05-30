@@ -8,6 +8,7 @@ tutorial_page: 2
 <h2>Background: Matrix-multiplication</h2>
 
 Before we look at OpenCL code, let us define the computation we are about to perform. According to the definition of BLAS libraries, the single-precision general matrix-multiplication (SGEMM) computes the following:
+<br>
 <div id="equation">
     C := alpha * A * B + beta * C
 </div>
@@ -25,7 +26,7 @@ This computation is illustrated in the following image: to compute a single elem
 <br/><br/>
 
 This version of SGEMM can be implemented in plain C using 3 nested loops (see below). We assume data to be stored in column-major format (Fortran-style), following cuBLAS's default. If we wanted, we could easily change this to row-major by swapping the A and B matrices and the N and M constants, so this is not a real limitation of our code.
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 for (int m=0; m&lt;M; m++) {
     for (int n=0; n&lt;N; n++) {
@@ -37,6 +38,7 @@ for (int m=0; m&lt;M; m++) {
     }
 }
 </pre>
+<br>
 
 To keep things simple for now, we assume that the matrix sizes are nice multiples of 32, such that we can for example create OpenCL workgroups of size 32 by 32 without having to worry about boundary conditions. There will be assumptions along these lines in the next couple of pages, but that's mainly because we want to keep the code simple and the main story-line easy to follow.
 <br/><br/>

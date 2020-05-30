@@ -11,14 +11,14 @@ In the previous kernel we increased the amount of work in the column-dimension o
 <br/><br/>
 
 First, we set the launch-parameters of our new kernel considering that we'll use data-types of width 'WIDTH':
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 const size_t local[2] = { TS/WIDTH, TS };
 const size_t global[2] = { M/WIDTH, N };
-</pre>
+</pre><br>
 
 OpenCL already defines floating-point vector types, which makes using them quite convenient. And we also don't have to transform our matrices into vector types: we can simply cast the pointers in our kernel. To remain flexible, we'll create a new data-type to be able to configure the WIDTH parameter with a pre-processor define:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 #define WIDTH 4
 #if WIDTH == 1
@@ -28,13 +28,13 @@ OpenCL already defines floating-point vector types, which makes using them quite
 #elif WIDTH == 4
     typedef float4 floatX;
 #endif
-</pre>
+</pre><br>
 
 The new kernel is given below. We have left out support for the float8 data-type to make the code more readable, although WIDTH is actually set to 8 for our benchmark, as this gives the best performance. The kernel is based on the same concept that we used for the previous kernel, but there are a few changes:
 The increased amount of work per thread is now found in dimension 0 (rows of C) rather than 1 (columns of C).
 Since the data-types are now vectors, all indices have to be divided by a factor WIDTH.
 The inner-loop computation has to be written out, as it is not a vector FMA operation. An alternative solution is to use a scalar pointer to local memory and a regular loop.
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // Use wider data types
 __kernel void myGEMM4(const int M, const int N, const int K,
@@ -113,7 +113,7 @@ __kernel void myGEMM4(const int M, const int N, const int K,
     // Store the final results in C
     C[globalCol*(M/WIDTH) + globalRow] = acc;
 }
-</pre>
+</pre><br>
 
 This kernel performs a bit better than the previous kernel due to its wider data-types and thus fewer load/store instructions. But the real benefit will be apparent later on when we will combine these two techniques.
 

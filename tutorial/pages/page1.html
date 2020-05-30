@@ -23,6 +23,7 @@ The main reason why I wrote this article - and the code - is the poor performanc
 <br/><br/>
 
 Like I said, we'll go over the optimisations step-by-step. And remember, they all come with OpenCL code, so please _do_ try this at home. Just a quick heads-up of what the steps are:
+<br><br>
 <ol>
     <li>Naive implementation</li>
     <li>Tiling in the local memory</li>
@@ -35,5 +36,6 @@ Like I said, we'll go over the optimisations step-by-step. And remember, they al
     <li>Software pre-fetching</li>
     <li>Incomplete tiles and support for arbitrary matrix-sizes</li>
 </ol>
+<br>
 
 Technical notes: All tests were performed on a Kepler SM 3.5 GPU, the Tesla K40m. The GPU was configured with ECC enabled. Version 6.5 of the CUDA toolkit was used (including OpenCL).

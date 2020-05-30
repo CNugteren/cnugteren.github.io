@@ -8,7 +8,7 @@ tutorial_page: 3
 <h2>Kernel 1: Naive implementation</h2>
 
 Our first implementation is rather straightforward (and slow), but it gives us a good amount of parallelism and a nice starting point for further optimisations. We basically transform the two outer-loops over M and N (see the previous page) into two dimensions of parallel threads (named "work-items" in OpenCL).
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 // First naive implementation
 __kernel void myGEMM1(const int M, const int N, const int K,
@@ -29,10 +29,10 @@ __kernel void myGEMM1(const int M, const int N, const int K,
     // Store the result
     C[globalCol*M + globalRow] = acc;
 }
-</pre>
+</pre><br>
 
 As you can see, the indices m and n of the loops over M and N have been replaced with the thread-identifiers globalRow and globalCol. To make this work, we'll have to make sure that the GPU executes this code M * N times. We can do this in the host-code (which runs on the CPU). Assuming you have already initialised OpenCL, created the appropriate buffers and memory copies, create a queue, and compiled the kernel code (see GitHub for an example or use this <a href="https://github.com/CNugteren/myGEMM/blob/master/extra/minimal.cpp">MWE</a>), this is how you launch the above kernel:
-<br/>
+<br/><br>
 <pre class="prettyprint linenums lang-cuda">
 kernel = clCreateKernel(program, "myGEMM1", &err)
 err = clSetKernelArg(kernel, 0, sizeof(int), (void*)&M);
@@ -48,7 +48,7 @@ err = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
                              global, local, 0, NULL, &event);
 err = clWaitForEvents(1, &event);
 </pre>
-
+<br>
 The order of M and N (and thus globalRow and globalCol in the kernel) is actually not a random choice. In fact, assigning the parallelism over M to threads in the first dimension (like we did) gives us much better performance. The reason is that subsequent threads (in the first dimension) now access subsequent data-elements of matrices A and C, allowing memory requests to be "coalesced" (grouped together in more efficient bursts). Accesses to B are un-coalesced independent of the order of M and N, since each thread requires subsequent elements of B themselves (an entire column). But don't worry, we'll fix that in the next version.
 <br/><br/>
 
