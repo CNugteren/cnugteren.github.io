@@ -53,9 +53,9 @@
                 {% endif %}
 
                 {% if page.current == 5 %}
-                    <li id="menu_current2"><a href="/tutorial/pages/page1.html">CL SGEMM<br>tutorial</a></li>
+                    <li id="menu_current1"><a href="/tutorial/pages/page1.html">GEMM tutorial</a></li>
                 {% else %}
-                    <li id="menu_button2"><a href="/tutorial/pages/page1.html">CL SGEMM<br>tutorial</a></li>
+                    <li id="menu_button1"><a href="/tutorial/pages/page1.html">SGEMM tutorial</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -89,15 +89,11 @@
                     {% if page.tutorial_page != 11 %}<a href='/tutorial/pages/page11.html'>- Kernel 9</a>{% else %}- Kernel 9{% endif %}<br/>
                     {% if page.tutorial_page != 12 %}<a href='/tutorial/pages/page12.html'>- Kernel 10</a>{% else %}- Kernel 10{% endif %}<br/>
                     {% if page.tutorial_page != 13 %}<a href='/tutorial/pages/page13.html'>- What's next?</a>{% else %}- What's next?{% endif %}<br/>
-                    <br>
-                    <div id="box_title">Extra pages:</div>
                     {% if page.tutorial_page != 14 %}<a href='/tutorial/pages/page14.html'>- Inside clBlas</a>{% else %}- Inside clBlas{% endif %}<br/>
-                    {% if page.tutorial_page != 15 %}<a href='/tutorial/pages/page15.html'>- clBlas on AMD GPUs</a>{% else %}- clBlas on AMD GPUs{% endif %}<br/>
-                    <br>
+                    {% if page.tutorial_page != 15 %}<a href='/tutorial/pages/page15.html'>- clBlas on AMD</a>{% else %}- clBlas on AMD GPUs{% endif %}<br/>
                 {% elsif page.current == 4 %}
                     <div id="box_title">CLBlast links:</div>
                     <a href=https://github.com/CNugteren/CLBlast>GitHub</a><br/>
-                    <br/>
                     <div id="box_title">Navigation:</div>
                     {% if page.clblast_page %}<a href='/clblast/clblast.html'>- Main page</a>{% else %}- Main page{% endif %}<br/>
                     {% if page.clblast_page != 1 %}<a href='/clblast/results/gtx750ti.html'>- GeForce GTX750 Ti</a>{% else %}- GeForce GTX750 Ti{% endif %}<br/>
@@ -108,12 +104,12 @@
                     {% if page.clblast_page != 6 %}<a href='/clblast/results/skylakeultgt2.html'>- Skylake ULT GT2</a>{% else %}- Skylake ULT GT2{% endif %}<br/>
                     {% if page.clblast_page != 7 %}<a href='/clblast/results/i56200u.html'>- Core i5-6200U</a>{% else %}- Core i5-6200U{% endif %}<br/>
                     {% if page.clblast_page != 8 %}<a href='/clblast/results/mali.html'>- Mali T628</a>{% else %}- Mali T628{% endif %}<br/>
-                    <br/>
                 {% else %}
                     <div id="box_title_main">Cedric Nugteren's home</div>
                     <div id="box_title">Current job:</div>
-                    Machine learning software engineer
-                    <div id="box_title">Current location:</div>
+                    Machine learning<br>
+                    software engineer
+                    <div id="box_title">Location:</div>
                     Amsterdam, NL
                     <div id="box_title">Year of birth:</div>
                     1986

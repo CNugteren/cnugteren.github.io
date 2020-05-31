@@ -177,19 +177,16 @@ img.topimage {
 #menu a:hover {
 	background: #4765B1;
 }
-#menu_button1 a, #menu_current1 a, #menu_button2 a, #menu_current2 a {
+#menu_button1 a, #menu_current1 a {
 	color: white;
 	text-decoration: none;
 	background: #333333;
 	width: 120px;
 }
 #menu_button1 a, #menu_current1 a {
-	padding: 1.2em 1em 1.2em 1em;
+	padding: 1.0em 1em 1.0em 1em;
 }
-#menu_button2 a, #menu_current2 a {
-	padding: 0.5em 1em 0.5em 1em;
-}
-#menu_current1 a, #menu_current2 a {
+#menu_current1 a {
 	background: #4765B1;
 }
 
@@ -264,14 +261,6 @@ img.topimage {
 	padding-bottom: 5px;
     color: #D67568;
 	border-bottom: 1px solid #cccccc;
-}
-#box {
-	position: absolute;
-	width: 135px;
-	height: 150px;
-	background: #eeeeee;
-	padding: 5px;
-	top: 330px;
 }
 
 /******************** 
