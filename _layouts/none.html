@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>{{ page.title }}</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" type="text/css" href="/css/main.css">
+			<script type="text/javascript">
+				function gen_mail_to_link(lhs, rhs, subject) {
+					document.write("<a href=\"mailto");
+					document.write(":" + lhs + "@");
+					document.write(rhs + "?subject=" + subject + "\">" + lhs + "@" + rhs + "<\/a>");
+				}
+			</script>
+		</head>
+    <body>
+        
+        <div class="header">
+            <ul id="menu">
+            </ul>
+        </div>
+
+        <div id="main">
+
+            {{ content }}
+
+        </div>
+
+        <div class="right"></div>
+
+		<div id="footer">
+            cnugteren.github.io
+        </div>
+
+    </body>
+</html>
