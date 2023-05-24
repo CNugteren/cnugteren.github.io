@@ -66,8 +66,8 @@ __kernel void myGEMM4(const int M, const int N, const int K,
     for (int t=0; t&lt;numTiles; t++) {
 
         // Load one tile of A and B into local memory
-        const int tiledRow = (TS/WIDTH)*tile + row;
-        const int tiledCol = TS*tile + col;
+        const int tiledRow = (TS/WIDTH)*t + row;
+        const int tiledCol = TS*t + col;
         Asub[col][row] = A[tiledCol*(M/WIDTH) + globalRow];
         Bsub[col][row] = B[globalCol*(K/WIDTH) + tiledRow];
        
